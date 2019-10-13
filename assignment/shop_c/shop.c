@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+char *banner = "--------------------------------------\n";
 
 struct Product {
 	char* name;
@@ -28,31 +29,36 @@ struct Customer {
 void printProduct(struct Product p)
 {
 	printf("PRODUCT NAME:\t%s \nPRODUCT PRICE:\t%.2f\n", p.name, p.price);
-	// printf("-------------\n");
 }
 
 void printCustomer(struct Customer c)
 {
+	printf("\n\n%s\t\tCUSTOMER\n%s",banner,banner);
 	printf("CUSTOMER NAME: %s \nCUSTOMER BUDGET: %.2f\n", c.name, c.budget);
-	printf("-------------\n");
+	printf(banner);
+	double sum = 0;
 	for(int i = 0; i < c.index; i++)
 	{
 		printProduct(c.shoppingList[i].product);
-		printf("%s ORDERS %d OF ABOVE PRODUCT\n", c.name, c.shoppingList[i].quantity);
-		double cost = c.shoppingList[i].quantity * c.shoppingList[i].product.price; 
-		printf("The cost to %s will be €%.2f\n", c.name, cost);
+		printf("QUANTITY:\t%d\n",c.shoppingList[i].quantity);
+		double prod = c.shoppingList[i].quantity * c.shoppingList[i].product.price; 
+		printf("TOTAL:\t\t%.2f\n\n", prod);
+		sum+=prod;
 	}
+	printf("TOTAL COST:\t%.2f\n",sum);
+	printf("BUDGET BALANCE:\t%.2f\n",c.budget-sum);
 }
 
 void printShop(struct Shop s)
 {
-	printf("\n\nCASH:\t\t€ %.2f", s.cash);
-	printf("\n---------------------------------\n\n");
+	printf("\n\n%s\t\tSHOP\n%s",banner,banner);
+	printf("CASH:\t\t€ %.2f", s.cash);
+	printf("\n%s",banner);
 	for (int i = 0; i < s.index; i++)
 	{
 		printProduct(s.stock[i].product);
 		printf("STOCK LEVEL:\t%d ", s.stock[i].quantity);
-		printf("\n---------------------------------\n\n");
+		printf("\n\n");
 	}
 }
 
@@ -77,49 +83,51 @@ struct Customer createAndLoadShoppingList(char *csvfile){
 	char * line = NULL;
 	size_t length = 0;
 	ssize_t read;
-
+	char *tokens[3];
+	
 	fp = fopen(csvfile, "r");
 	if (fp == NULL)
 			exit(EXIT_FAILURE);
 
+	// read the csv file line by line in the while loop
 	while ((read = getline(&line, &length, fp)) != -1) {
-		//printf("LEN:\t%zu:\n", read);
-		//printf("LINE: %s (len:%zu)\n", line, read);
-		char *t = strtok(line, ",");
-		char *v = strtok(NULL, ",");
-		char *tag = malloc(sizeof(char) * 25);
-		char *val = malloc(sizeof(char) * 25);
-		//strcpy(tag, t);
-		//strcpy(val, v);
-		//tag = stripNewline(t);
-		//val = stripNewline(v);
-		strcpy(tag,stripNewline(t));
-		strcpy(val,stripNewline(v));
-		//if the customer name is returned execute this code		
-		if (strstr(tag,"Name") != NULL|strstr(tag,"name") != NULL)
-		{
-			//printf("%s:\t%s\n",t,v);
-			customer.name = val;
+		int idx=0; // reset the tokens array index
+		char *t = strtok(line, ","); // read the first value untill a comma is encountered
+		// repeat reading untill a null charecter is encountered
+		while ( t != NULL ){
+			char *token = malloc(sizeof(char) * 25); //create a local token string variable
+			strcpy(token,stripNewline(t)); // copy the value t to token after cleanup
+			tokens[idx++]=token; // add all the tokens to the token array for further processing
+			t = strtok(NULL, ",");//read the next token untill null
 		}
-		//otherwise if the budget is returned execute this code
-		else if (strstr(tag,"Budget") != NULL|strstr(tag,"budget") != NULL)
+		// if the customer name was read in, run this code
+		if (strstr(tokens[0],"Name") != NULL|strstr(tokens[0],"name") != NULL)
 		{
-			double budget = atof(val);
-			//printf("%s:\t%.2f\n",tag,val);
+			// add the customer name to the customer structure variable name
+			customer.name = tokens[1];
+		}
+		// otherwise if the budget is returned execute this code
+		else if (strstr(tokens[0],"Budget") != NULL|strstr(tokens[0],"budget") != NULL)
+		{
+			double budget = atof(tokens[1]);// convert the budget value to a float
+			// and assign it to the customer structure 
 			customer.budget = budget;
 		}
-		//otherwise add the shopping list quantity to the customer is a strctured way
+		//otherwise add the shopping list quantity and cost to the customer in a structured way
 		//and increment the index
 		else
 		{
-			int n = atoi(val);
-			//printf("%s:\t%i\n",t,n);
-			struct Product product = { tag };
+			int n = atoi(tokens[2]); // convert the number of items to an interger value
+			double cost = atof(tokens[1]);// convert the cost to a floating point value
+			//create a product structure with a name and cost
+			struct Product product = { tokens[0], cost };
+			//and add the product structure and number of the items to the shopping list
 			struct ProductStock shopList = { product, n };
+			//and update the shoppinglist with the content while also incrementing the index
 			customer.shoppingList[customer.index++] = shopList;
 		}
 	}	
-
+	//and when the loops conclude return the customer structre to the calling function
 	return customer;
 }
 
@@ -133,7 +141,7 @@ struct Shop createAndStockShop()
 	ssize_t read;
 
 	fp = fopen("stock.csv", "r");
-	if (fp == NULL)
+	if (fp == NULL) 
 			exit(EXIT_FAILURE);
 
 	while ((read = getline(&line, &len, fp)) != -1) {
@@ -170,28 +178,13 @@ struct Shop createAndStockShop()
 
 
 int main(void) 
-{
-	//struct Customer dominic = { "Dominic", 100.0 };
-	//
-	// struct Product coke = { "Can Coke", 1.10 };
-	// struct Product bread = { "Bread", 0.7 };
-	// // printProduct(coke);
-	//
-	// struct ProductStock cokeStock = { coke, 20 };
-	// struct ProductStock breadStock = { bread, 2 };
-	//
-	// dominic.shoppingList[dominic.index++] = cokeStock;
-	// dominic.shoppingList[dominic.index++] = breadStock;
-	//
-	// printCustomer(dominic);
-	
+{	
 	struct Shop shop = createAndStockShop();
-	//printShop(shop);
+	printShop(shop);
 	struct Customer customer = createAndLoadShoppingList("order.csv");
-	//printCustomer(customer);
+	printCustomer(customer);
 
-	
-	// printf("The shop has %d of the product %s\n", cokeStock.quantity, cokeStock.product.name);
+
 	
   return 0;
 }
