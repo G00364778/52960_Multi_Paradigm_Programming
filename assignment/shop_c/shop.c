@@ -1,3 +1,5 @@
+// https://alvinalexander.com/programming/printf-format-cheat-sheet
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -64,16 +66,11 @@ void printShop(struct Shop s)
 
 const char * stripNewline(char *textStr){
 	// strip off \n character
-	if (textStr[strlen(textStr)-1] == '\n'){
-		textStr[strlen(textStr)-1] = '\0';
-	}
+	if (textStr[strlen(textStr)-1] == '\n'){textStr[strlen(textStr)-1] = '\0';}
 	// strip off \r character
-	if (textStr[strlen(textStr)-1] == '\r'){
-		textStr[strlen(textStr)-1] = '\0';
-	}
+	if (textStr[strlen(textStr)-1] == '\r'){textStr[strlen(textStr)-1] = '\0';	}
 	// strip leading white space
-	while(isspace((unsigned char)*textStr)) textStr++;
-
+	while(isspace((unsigned char)*textStr)){textStr++;}
 	return textStr;
 } 
 
@@ -175,16 +172,54 @@ struct Shop createAndStockShop()
 	return shop;
 }
 
+void processOrder(struct Shop s, struct Customer c){
+	/* printf("\n%s\t   ORDER PROCESSING\n%s",banner,banner);
+	printf("\n%s\t     SHOPPING LIST\n%s",banner,banner);
+	for (int i=0;i<c.index;i++){
+		printf("%3i. %s\n",i+1,c.shoppingList[i].product.name);
+	}
+	printf("\n%s\t     SHOPPING STOCK\n%s",banner,banner);
+	for (int i=0;i<c.index;i++){
+		printf("%3i. %s\n",i+1,s.stock[i].product.name);
+	} */
 
+	for (int i=0;i<c.index;i++){
+		short isInShop = 0;
+		char *list = malloc(sizeof(char) * 25);
+		strcpy(list,  c.shoppingList[i].product.name);
+		for (int j = 0; j < s.index; j++){
+			char *shop = malloc(sizeof(char) * 25);
+			strcpy(shop,  s.stock[j].product.name);
+			//find the item in the shopping list in the shop
+			if (strstr(list, shop) != NULL){//if shopping list item is in shope
+				isInShop=1;
+				printf("Found in shop:\t%s\n", shop);
+				// now check if the order quantity can be filled from stock
+				int qOrder = c.shoppingList[i].quantity;
+				int qShop = s.stock[j].quantity;
+				if (qOrder<qShop){ //the order can be filled
+					printf("  Adding %s to order\n",shop);
+				}
+				else { //the order cannot be filled
+					printf("  ERROR: Stock insufficient on %s\n",shop);
+				}
+			}
+			//reached the end of the list and item was not found
+			if (j == s.index-1 & !isInShop) { //shopping list item is not is shop
+				printf("NOT in shop:\t%s\n", list);
+			}
+		}
+		
+	}
+	return;
+}
 
 int main(void) 
 {	
 	struct Shop shop = createAndStockShop();
-	printShop(shop);
+	//printShop(shop);
 	struct Customer customer = createAndLoadShoppingList("order.csv");
-	printCustomer(customer);
-
-
-	
+	//printCustomer(customer);
+	processOrder(shop,customer);
   return 0;
 }
