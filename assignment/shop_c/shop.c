@@ -53,8 +53,9 @@ void printCustomer(struct Customer c)
 
 void printShop(struct Shop s)
 {
+	
 	printf("\n\n%s\t\tSHOP\n%s",banner,banner);
-	printf("CASH:\t\t€ %.2f", s.cash);
+	printf("CASH:\t\t€ %.2f", s.cash
 	printf("\n%s",banner);
 	for (int i = 0; i < s.index; i++)
 	{
@@ -182,6 +183,18 @@ void processOrder(struct Shop s, struct Customer c){
 	for (int i=0;i<c.index;i++){
 		printf("%3i. %s\n",i+1,s.stock[i].product.name);
 	} */
+	//s.cash;
+	//s.index;
+	//s.stock[0].quantity;
+	//s.stock[0].product.name;
+	//s.stock[0].product.price;
+
+	//c.budget;
+	//c.index;
+	//c.name;
+	//c.shoppingList[0].quantity;
+  //c.shoppingList[0].product.name;
+	//c.shoppingList[0].product.price;
 
 	for (int i=0;i<c.index;i++){
 		short isInShop = 0;
@@ -199,6 +212,8 @@ void processOrder(struct Shop s, struct Customer c){
 				int qShop = s.stock[j].quantity;
 				if (qOrder<qShop){ //the order can be filled
 					printf("  Adding %s to order\n",shop);
+					// if the order can be filled, remove the item from the shop stock
+					// and add the cash to the shop cash
 				}
 				else { //the order cannot be filled
 					printf("  ERROR: Stock insufficient on %s\n",shop);
@@ -217,7 +232,7 @@ void processOrder(struct Shop s, struct Customer c){
 int main(void) 
 {	
 	struct Shop shop = createAndStockShop();
-	//printShop(shop);
+	printShop(shop);
 	struct Customer customer = createAndLoadShoppingList("order.csv");
 	//printCustomer(customer);
 	processOrder(shop,customer);
