@@ -1,0 +1,21 @@
+====== GCC Debugger setup in VS Code ======
+
+  - Open C file in VS Code
+  - Set breakpoint in code
+  - Press F5 or select Start debugging from Debug menu\\
+{{/media/image1.png?303x117}}
+  - Select C++(GDB/LLDB) from popup\\
+{{/media/image2.png?404x130}}
+  - Then select gcc.exe build and debug active file\\
+{{/media/image3.png?305x90}}
+  - The Launch.json window should now pop up, see that this has the right path to your gdb.exe file, save and close.\\
+{{/media/image4.png?601x519}}
+  - G back to the C file and F5 again, ow it should pop up a message about not being able to build the active file, click “Configure Task”.\\
+{{/media/image5.png?387x121}}
+  - Select C/C++:gcc.exe build active file
+  - Now the task,json file should pop up and confirm that “command” points to the right location where the gcc.exe file is located. Save and close\\
+{{/media/image6.png?530x553}}
+  - Go back to the C file again and press F5.
+  - Now everything should start up and the code should stop at the debugger breakpoint.\\
+{{/media/image7.png?601x192}}
+
