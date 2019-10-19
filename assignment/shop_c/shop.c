@@ -55,7 +55,7 @@ void printShop(struct Shop s)
 {
 	
 	printf("\n\n%s\t\tSHOP\n%s",banner,banner);
-	printf("CASH:\t\t€ %.2f", s.cash
+	printf("CASH:\t\t€ %.2f", s.cash);
 	printf("\n%s",banner);
 	for (int i = 0; i < s.index; i++)
 	{
@@ -174,6 +174,7 @@ struct Shop createAndStockShop()
 }
 
 void processOrder(struct Shop s, struct Customer c){
+
 	/* printf("\n%s\t   ORDER PROCESSING\n%s",banner,banner);
 	printf("\n%s\t     SHOPPING LIST\n%s",banner,banner);
 	for (int i=0;i<c.index;i++){
@@ -232,7 +233,7 @@ void processOrder(struct Shop s, struct Customer c){
 int main(void) 
 {	
 	struct Shop shop = createAndStockShop();
-	printShop(shop);
+	//printShop(shop);
 	struct Customer customer = createAndLoadShoppingList("order.csv");
 	//printCustomer(customer);
 	processOrder(shop,customer);
