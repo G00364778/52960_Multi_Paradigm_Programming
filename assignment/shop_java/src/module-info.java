@@ -1,0 +1,2 @@
+module shop_java {
+}
