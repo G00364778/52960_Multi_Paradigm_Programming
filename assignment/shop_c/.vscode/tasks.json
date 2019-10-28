@@ -18,8 +18,7 @@
       },
       "problemMatcher": [
         "$gcc"
-      ],
-      "group": "build"
+      ]
     }
   ]
 }
