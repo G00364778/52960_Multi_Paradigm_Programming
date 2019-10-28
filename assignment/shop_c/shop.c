@@ -47,6 +47,7 @@ void printCustomer(struct Customer c)
 		printf("TOTAL:\t\t%.2f\n\n", prod);
 		sum+=prod;
 	}
+	printf("ESTIMATED VALUES ONLY \n");
 	printf("TOTAL COST:\t%.2f\n",sum);
 	printf("BUDGET BALANCE:\t%.2f\n",c.budget-sum);
 }
@@ -173,69 +174,78 @@ struct Shop createAndStockShop()
 	return shop;
 }
 
-void processOrder(struct Shop s, struct Customer c){
+struct Shop processOrder(struct Shop s, struct Customer c){
 
-	/* printf("\n%s\t   ORDER PROCESSING\n%s",banner,banner);
-	printf("\n%s\t     SHOPPING LIST\n%s",banner,banner);
-	for (int i=0;i<c.index;i++){
-		printf("%3i. %s\n",i+1,c.shoppingList[i].product.name);
-	}
-	printf("\n%s\t     SHOPPING STOCK\n%s",banner,banner);
-	for (int i=0;i<c.index;i++){
-		printf("%3i. %s\n",i+1,s.stock[i].product.name);
-	} */
-	//s.cash;
-	//s.index;
-	//s.stock[0].quantity;
-	//s.stock[0].product.name;
-	//s.stock[0].product.price;
-
-	//c.budget;
-	//c.index;
-	//c.name;
-	//c.shoppingList[0].quantity;
-  //c.shoppingList[0].product.name;
-	//c.shoppingList[0].product.price;
-
+	double total=0; //create  variable for adding up the amount due for the products in stock
+	printf("\n\n%s\tPROCESSING ORDER\n%s",banner,banner);
+	// create an outer loop and loop through the shopping list
 	for (int i=0;i<c.index;i++){
 		short isInShop = 0;
 		char *list = malloc(sizeof(char) * 25);
 		strcpy(list,  c.shoppingList[i].product.name);
+		// and create an inner loop and loop through the shop
 		for (int j = 0; j < s.index; j++){
 			char *shop = malloc(sizeof(char) * 25);
 			strcpy(shop,  s.stock[j].product.name);
 			//find the item in the shopping list in the shop
 			if (strstr(list, shop) != NULL){//if shopping list item is in shope
 				isInShop=1;
-				printf("Found in shop:\t%s\n", shop);
+				printf("IN STOCK:");
 				// now check if the order quantity can be filled from stock
 				int qOrder = c.shoppingList[i].quantity;
 				int qShop = s.stock[j].quantity;
-				if (qOrder<qShop){ //the order can be filled
-					printf("  Adding %s to order\n",shop);
+				double price = s.stock[j].product.price;
+				if (qOrder<qShop){ //the order can be fully filled
+					printf(" %s x %i @ %.2f\n",shop, qOrder, price);
 					// if the order can be filled, remove the item from the shop stock
-					// and add the cash to the shop cash
+					s.stock[j].quantity-=qOrder;//reduce the shop stock
+					s.cash+=(s.stock[j].product.price*qOrder);//increase the shop cash
+					total+=(qOrder*price);
 				}
-				else { //the order cannot be filled
-					printf("  ERROR: Stock insufficient on %s\n",shop);
+				else { //the order cannot be fully filled, add what is available
+					printf(" %s x %i @ %.2f , %i short\n",shop, qShop, price, qOrder-qShop);
+					s.stock[j].quantity-=qShop;
+					s.cash+=(s.stock[j].product.price*qShop);
+					total+=(qShop*price);
 				}
 			}
 			//reached the end of the list and item was not found
 			if (j == s.index-1 & !isInShop) { //shopping list item is not is shop
-				printf("NOT in shop:\t%s\n", list);
+				printf("NO STOCK: %s\n", list);
 			}
 		}
-		
 	}
+	printf("%s   TOTAL:\t%4.2f\n",banner,total);//print out the total
+	printf(" BALANCE:\t%4.2f",c.budget-total);//print oiut the balance left from the budget submitted
+	return s;
+}
+
+void saveShopState(struct Shop s,char * filename){
+	//a function to save the shop status back after completing the transactions submitted
+	//s.cash;
+	//s.index;
+	//s.stock[0].quantity;
+	//s.stock[0].product.name;
+	//s.stock[0].product.price;
+	
+	FILE * fp;
+	fp=fopen(filename,"w+");
+	fprintf(fp,"Cash, %.2f\n",s.cash);
+	for (int i=0;i<s.index;i++){
+		fprintf(fp, "%s, %.2f, %i\n",s.stock[i].product.name,s.stock[i].product.price,s.stock[i].quantity);
+	}
+	fclose(fp);
 	return;
 }
 
 int main(void) 
 {	
 	struct Shop shop = createAndStockShop();
-	//printShop(shop);
+	printShop(shop);
 	struct Customer customer = createAndLoadShoppingList("order.csv");
-	//printCustomer(customer);
-	processOrder(shop,customer);
+	printCustomer(customer);
+	shop = processOrder(shop,customer);
+	printShop(shop);
+	saveShopState(shop,"stock.csv");
   return 0;
 }
