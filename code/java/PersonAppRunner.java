@@ -5,9 +5,10 @@ public class PersonAppRunner{
         Person b = new Person("Paul", 51);
         System.out.println(a);
         //a.age = -1;
-        a.setAge(40);
+        a.setAge(-1);
         System.out.println(a);
-        System.out.println(b);
+        a.setAge(10);
+        System.out.println(a);
 
     }
 }
