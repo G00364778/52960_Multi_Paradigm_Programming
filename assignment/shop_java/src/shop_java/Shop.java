@@ -17,14 +17,14 @@ public class Shop {
 		List<String> lines = Collections.emptyList();
 		try {
 			lines = Files.readAllLines(Paths.get(fileName), StandardCharsets.UTF_8);
-			System.out.println(lines.get(0));
+			//System.out.println(lines.get(0));
 			String[] vals = lines.get(0).split(",");
 			cash = Double.parseDouble(vals[1]);
 			//cash = Double.parseDouble(lines.get(0));
 			// i am removing at index 0 as it is the only one treated differently
 			lines.remove(0);
 			for (String line : lines) {
-				System.out.println(line);
+				//System.out.println(line);
 				String[] arr = line.split(",");
 				String name = arr[0];
 				double price = Double.parseDouble(arr[1]);
@@ -58,6 +58,9 @@ public class Shop {
 
 	public static void main(String[] args) {
 		Shop shop = new Shop("src/shop_java/stock.csv");
+		System.out.println(shop);
+		//Customer james = new Customer("src/shop_java/customer.csv");
+		//System.out.println(james);
 	}
 
 }
