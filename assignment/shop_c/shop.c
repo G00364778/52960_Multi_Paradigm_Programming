@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <ctype.h>
+
 char *banner = "--------------------------------------\n";
 
 struct Product {
@@ -238,14 +240,39 @@ void saveShopState(struct Shop s,char * filename){
 	return;
 }
 
+char displayShopMenu(void)
+{
+	//system("@cls|clear");
+	printf("%s\tINTERACTIVE SHOP MENU\n%s",banner,banner);
+	printf("\tx - Exit Application\n");
+	printf("\n  Select option please: ");
+	char c = getchar();
+	printf("\n");
+	return c;
+}
+
 int main(void) 
-{	
-	struct Shop shop = createAndStockShop();
-	printShop(shop);
-	struct Customer customer = createAndLoadShoppingList("order.csv");
-	printCustomer(customer);
-	shop = processOrder(shop,customer);
-	printShop(shop);
-	saveShopState(shop,"stock.csv");
+{
+	int loop = 1;
+	while (loop==1){
+		char c = displayShopMenu();
+		if (c=='x'){
+			loop=0;
+		}
+		else
+		{
+			printf("\n  Invalid option!\n  Try again please.\n\n");
+		}
+		
+	}
+
+	//printf("returned: %c", c);
+	//struct Shop shop = createAndStockShop();
+	//printShop(shop);
+	//struct Customer customer = createAndLoadShoppingList("order.csv");
+	//printCustomer(customer);
+	//shop = processOrder(shop,customer);
+	//printShop(shop);
+	//saveShopState(shop,"stock.csv");
   return 0;
 }
