@@ -240,25 +240,76 @@ void saveShopState(struct Shop s,char * filename){
 	return;
 }
 
-char displayShopMenu(void)
+
+char displayShopMenu()
 {
-	//system("@cls|clear");
+	static int ShopLoaded = 0, ListLoaded = 0 ;
+	system("clear");
 	printf("%s\tINTERACTIVE SHOP MENU\n%s",banner,banner);
+	printf("STOCKED: %i LIST: % i\n",ShopLoaded, ListLoaded);
+	printf("%s",banner);
+	printf("\tl - Load Shop Stock from csv\n");
+	printf("\tp - Print Shop Stock\n");
+	printf("\ts - Load the shopping list from csv\n");
+	printf("\tr - Print the shopping list\n");
+	printf("\th - Process shopping list\n");
 	printf("\tx - Exit Application\n");
 	printf("\n  Select option please: ");
 	char c = getchar();
 	printf("\n");
+	if (c=='l'){ShopLoaded=1;}
+	if (c=='s'){ListLoaded=1;}
 	return c;
 }
 
 int main(void) 
 {
-	int loop = 1;
+	struct Shop shop;
+	struct Customer customer;
+	int loop = 1;//set to one to use menu
 	while (loop==1){
 		char c = displayShopMenu();
-		if (c=='x'){
-			loop=0;
+		//printf("returned: %c", c);
+		if (c=='x') //exit
+		{
+			loop=0; //loop will break orr pass return
+			printf("  Exiting interactive mode now...\n");
+			saveShopState(shop,"stock.csv"); //on exit save the shop state
 		}
+		else if (c=='l') //load shop 
+		{
+			printf("  Loading stock now ....\n");
+			 shop = createAndStockShop();
+		}	
+		else if (c=='p') //print shop
+		{
+			printShop(shop);
+			printf(" <ENTER> to continue ");
+			getchar();
+			getchar();
+		}
+		else if (c=='s') //load shopping list
+		{
+			customer = createAndLoadShoppingList("order.csv");
+			//printf(" <ENTER> to continue ");
+			//getchar();
+			//getchar();
+		}
+		else if (c=='r') //print shopping list
+		{
+			printCustomer(customer);
+			printf(" <ENTER> to continue ");
+			getchar();
+			getchar();
+		}
+		else if (c=='h') //process the shopping list against the shop stock
+		{
+			shop = processOrder(shop,customer);
+			printf(" <ENTER> to continue ");
+			getchar();
+			getchar();
+		}
+		
 		else
 		{
 			printf("\n  Invalid option!\n  Try again please.\n\n");
@@ -266,7 +317,6 @@ int main(void)
 		
 	}
 
-	//printf("returned: %c", c);
 	//struct Shop shop = createAndStockShop();
 	//printShop(shop);
 	//struct Customer customer = createAndLoadShoppingList("order.csv");
