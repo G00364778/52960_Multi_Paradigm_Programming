@@ -1,0 +1,49 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "CodeLens (Launch) - RunShop",
+      "request": "launch",
+      "mainClass": "shop_java/shop_java.RunShop",
+      "projectName": "ShopVideoVersion"
+    },
+    {
+      "type": "java",
+      "name": "CodeLens (Launch) - Customer",
+      "request": "launch",
+      "mainClass": "shop_java/shop_java.Customer",
+      "projectName": "ShopVideoVersion"
+    },
+    {
+      "type": "java",
+      "name": "CodeLens (Launch) - Shop",
+      "request": "launch",
+      "mainClass": "shop_java/shop_java.Shop",
+      "projectName": "ShopVideoVersion"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch) - Current File",
+      "request": "launch",
+      "mainClass": "${file}"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-Customer<shop_java>",
+      "request": "launch",
+      "mainClass": "shop_java/shop_java.Customer",
+      "projectName": "shop_java"
+    },
+    {
+      "type": "java",
+      "name": "Debug (Launch)-Shop<shop_java>",
+      "request": "launch",
+      "mainClass": "shop_java/shop_java.Shop",
+      "projectName": "shop_java"
+    }
+  ]
+}
