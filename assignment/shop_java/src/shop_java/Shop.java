@@ -10,21 +10,21 @@ import java.util.List;
 
 public class Shop {
 	private double cash;
-	private ArrayList<ProductStock> stock;
+	private static ArrayList<ProductStock> stock;
 
 	public Shop(String fileName) {
 		stock = new ArrayList<>();
 		List<String> lines = Collections.emptyList();
 		try {
 			lines = Files.readAllLines(Paths.get(fileName), StandardCharsets.UTF_8);
-			//System.out.println(lines.get(0));
+			// System.out.println(lines.get(0));
 			String[] vals = lines.get(0).split(",");
 			cash = Double.parseDouble(vals[1]);
-			//cash = Double.parseDouble(lines.get(0));
+			// cash = Double.parseDouble(lines.get(0));
 			// i am removing at index 0 as it is the only one treated differently
 			lines.remove(0);
 			for (String line : lines) {
-				//System.out.println(line);
+				// System.out.println(line);
 				String[] arr = line.split(",");
 				String name = arr[0];
 				double price = Double.parseDouble(arr[1]);
@@ -33,7 +33,6 @@ public class Shop {
 				ProductStock s = new ProductStock(p, quantity);
 				stock.add(s);
 			}
-			
 		}
 
 		catch (IOException e) {
@@ -47,6 +46,23 @@ public class Shop {
 		return cash;
 	}
 
+	public String findProdInfo(String findme){
+		String result="NONE";
+		for (int i = 0; i < this.stock.size(); i++) {
+			ProductStock stockItem = this.stock.get(i);
+			if (stockItem.getProduct().getName().equalsIgnoreCase(findme)){
+				result="";
+				String pName = stockItem.getProduct().getName();
+				int pQuantity = stockItem.getQuantity();
+				double pPrice = stockItem.getProduct().getPrice();
+				result = "" + pName + "," + pPrice + "," + pQuantity;
+				System.out.println(result);
+				//return result;
+			}			
+		}
+		return result;
+	}
+
 	public ArrayList<ProductStock> getStock() {
 		return stock;
 	}
@@ -56,11 +72,17 @@ public class Shop {
 		return "Shop [cash=" + cash + ", stock=" + stock + "]";
 	}
 
-	public static void main(String[] args) {
-		Shop shop = new Shop("src/shop_java/stock.csv");
+	public static void printNice(Shop shop) {
 		System.out.println(shop);
-		//Customer james = new Customer("src/shop_java/customer.csv");
-		//System.out.println(james);
 	}
 
+	public static void main(String[] args) {
+		Shop shop = new Shop("src/shop_java/stock.csv");
+	
+		shop.findProdInfo("Coke Can");
+		//printNice(shop);
+		// Customer james = new Customer("src/shop_java/customer.csv");
+		// System.out.println(james);
+	}
+	
 }
