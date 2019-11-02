@@ -22,6 +22,10 @@ public class ProductStock {
 	public String toString() {
 		return "ProductStock [product=" + product + ", quantity=" + quantity + "]";
 	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
 	
 	
 

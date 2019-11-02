@@ -18,6 +18,9 @@ public class RunShop {
     Customer cust = new Customer("src/shop_java/customer.csv");
     double budget = cust.getBudget();
     String name = cust.getName();
+
+    String item = shop.findProdInfo("Spaghetti", 10);
+    shop.printItemDetails(item, true);
     //cust.getShoppingList()
     //https://stackoverflow.com/questions/14699439/how-can-i-search-through-an-arraylist-and-match-it-to-another-method
     //for (ProductStock item : stock) {
