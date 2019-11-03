@@ -36,14 +36,20 @@ public class Shop {
 		}
 
 		catch (IOException e) {
-
-			// do something
 			e.printStackTrace();
 		}
 	}
 
+	public void setCash(double cash) {
+		this.cash = cash;
+	}
+
 	public double getCash() {
 		return cash;
+	}
+
+	public ArrayList<ProductStock> getStock() {
+		return stock;
 	}
 
 	public String findProdInfo(String findme, int oQuantity){
@@ -60,34 +66,34 @@ public class Shop {
 		 * NONE or the matched item including name, quaantity and price as well as a comment if
 		 * stock was less than match. 
 		 */
-		String result="NONE";
+		String result=findme;
 		int deficit=0;
 		String msg="";// populate if stock is short
-		for (int i = 0; i < this.stock.size(); i++) {
-			ProductStock stockItem = this.stock.get(i);
-			if (stockItem.getProduct().getName().equalsIgnoreCase(findme)){
-				result="";
+		for (ProductStock stockItem : Shop.stock) {
+			if (stockItem.getProduct().getName().equalsIgnoreCase(findme)) {
+				result = "";
 				String pName = stockItem.getProduct().getName();
 				int pQuantity = stockItem.getQuantity();
 				double pPrice = stockItem.getProduct().getPrice();
 				System.out.println(result);
-				if (oQuantity>pQuantity) {//more things are ordered than available
+				if (oQuantity > pQuantity) {// more things are ordered than available
 					deficit = oQuantity - pQuantity;
-					oQuantity=pQuantity; //then set the order quantity to the available quantity
-				} 
-				if (deficit>0) {
-					msg="," + deficit + " short";
+					oQuantity = pQuantity; // then set the order quantity to the available quantity
+				}
+				if (deficit > 0) {
+					msg = "," + deficit + " short";
 				}
 				double total = oQuantity * pPrice;
-				stockItem.setQuantity(pQuantity-oQuantity);//subtract the order quantity from the stock
-				result = "" + pName + "," + oQuantity + "," + String.format("%.2f",pPrice) + "," + String.format("%.2f", total) + msg;
-				//return result;
-			}			
+				stockItem.setQuantity(pQuantity - oQuantity);// subtract the order quantity from the stock
+				result = "" + pName + "," + oQuantity + "," + String.format("%.2f", pPrice) + "," + String.format("%.2f", total)
+						+ msg;
+				// return result;
+			}
 		}
 		return result;
 	}
 
-	public static void printItemDetails(String sItem, boolean detail) {
+	public static double printItemDetails(String sItem, boolean detail) {
 		/**
 		 * <h2>printItemDetails</h2>
 		 * 
@@ -99,45 +105,49 @@ public class Shop {
 		 */
 		String[] itenNames = { "Item Name", "Order Quantity", "Unit Price", "Total", "Remark" };
 		String[] items = sItem.split(",");
+		double lineTotal = 0.0;
 		if (detail==true) {
 			for (int i = 0; i < items.length; i++) {
 				System.out.println(String.format("%14s: ",itenNames[i]) + items[i]);
 			}	
 		}
 		else{
-			if (items.length<=4) {
-				System.out.println(String.format("%-10s",items[0]) +" x "+ items[1] +" @ "+ items[2] +" = "+ items[3]);	
+			if (items.length==1){ 
+				System.out.printf("\n%-12s - not stocked", sItem);
 			}
-			else{
-				System.out.println(String.format("%-10s",items[0]) +" x "+ items[1] +" @ "+ items[2] +" = "+ items[3]+" - "+ items[4]);
+			else if (items.length==4) {
+				System.out.printf("%-12s x %3s @ %5s = %5s", items[0], items[1], items[2], items[3]);
+				lineTotal = Double.parseDouble(items[3].strip());	
+			}
+			else if (items.length==5){
+				System.out.printf("%-12s x %3s @ %5s = %5s - %s", items[0], items[1], items[2], items[3], items[4]);
+				lineTotal = Double.parseDouble(items[3].strip());
 			}
 		}
+		return lineTotal;
 	}
 
-	public ArrayList<ProductStock> getStock() {
-		return stock;
+	public void printInvenrtory(){
+		String sep="=======================\n";
+		System.out.printf("\n%s    SHOP INVENTORY \n",sep);
+		System.out.printf("%s%-16s %.2f\n", sep, "CASH", cash);
+		System.out.printf("%s%-14s %-5s %s\n%s",sep ,"Item","€","Q",sep);
+		for (ProductStock productStock : stock) {
+			int q = productStock.getQuantity();
+			String n = productStock.getProduct().getName();
+			double p = productStock.getProduct().getPrice();
+			System.out.printf("%-14s %.2f %3d\n",n,p,q);
+		}
 	}
-
+	
 	@Override
 	public String toString() {
-		return "Shop [cash=" + cash + ", stock=" + stock + "]";
+		return "\nShop [\n  cash=" + cash + ", \n  stock=" + stock + "\n]";
 	}
 
 	public static void main(String[] args) {
-		// String[] itenNames = {"Item Name","Order Quantity","Unit
-		// Price","Total","Remark"};
 		Shop shop = new Shop("src/shop_java/stock.csv");
-
-		String sItem = shop.findProdInfo("Coke Can", 107);
-		printItemDetails(sItem, false);
-		//String[] items = sItem.split(",");
-		//System.out.println("Items terurned: " + items.length);
-		// for (int i = 0; i < items.length; i++) {
-		// 	System.out.println(itenNames[i]+": "+items[i]);
-		// } 
-		
-		// Customer james = new Customer("src/shop_java/customer.csv");
-		// System.out.println(james);
+		//System.out.println(shop);
+		shop.printInvenrtory();
 	}
-	
 }

@@ -9,7 +9,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class Customer {
-	
 	private String name;
 	private double budget;
 	private ArrayList<ProductStock> shoppingList;
@@ -32,12 +31,9 @@ public class Customer {
 				ProductStock s = new ProductStock(p, quantity);
 				shoppingList.add(s);
 			}
-			
 		}
 
 		catch (IOException e) {
-
-			// do something
 			e.printStackTrace();
 		}
 	}
@@ -46,11 +42,9 @@ public class Customer {
 		return name;
 	}
 
-
 	public double getBudget() {
 		return budget;
 	}
-
 
 	public ArrayList<ProductStock> getShoppingList() {
 		return shoppingList;
@@ -61,16 +55,20 @@ public class Customer {
 	public String toString() {
 		String ret = "Customer [name=" + name + ", budget=" + budget + ", shoppingList=\n";
 		for (ProductStock productStock : shoppingList) {
-			ret+= productStock.getProduct().getName() + " Quantity: " + productStock.getQuantity() + "\n";
+			ret+= String.format("%-13s", productStock.getProduct().getName()) + " x  " + productStock.getQuantity() + "\n";
 		}
 		return ret + "]";
 	}
 	
 	public static void main(String[] args) {
 		Customer james = new Customer("src/shop_java/customer.csv");
-		System.out.println(james);
-	}
-	
-	
+		//System.out.println(james);
 
+		ArrayList<ProductStock> list = james.getShoppingList();
+		System.out.println("Customer name: " + james.name); 
+		for (ProductStock productStock : list) {
+			System.out.println("Item Name:" + productStock.getProduct().getName());
+			System.out.println("Item Quantity:" + productStock.getQuantity());
+		}
+	}
 }

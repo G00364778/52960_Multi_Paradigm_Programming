@@ -20,7 +20,7 @@ public class ProductStock {
 
 	@Override
 	public String toString() {
-		return "ProductStock [product=" + product + ", quantity=" + quantity + "]";
+		return "\n    ProductStock [\n    product=" + product + ",\n    quantity=" + quantity + "\n    ]";
 	}
 
 	public void setQuantity(int quantity) {
