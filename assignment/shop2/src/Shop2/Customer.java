@@ -4,9 +4,12 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Date;
 
 public class Customer {
 	
@@ -59,18 +62,20 @@ public class Customer {
 
 	@Override
 	public String toString() {
-		String ret = "Customer [name=" + name + ", budget=" + budget + ", shoppingList=\n";
+		DateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy HH:mm");
+	  Date date = new Date();
+		String dts = dateFormat.format(date); 
+		
+		String ret = "\nCUSTOMER: "+ name + "\n  BUDGET: " + String.format("%.2f",budget) + "\n";
+		ret+=dts+"\n"; 
 		for (ProductStock productStock : shoppingList) {
-			ret+= productStock.getProduct().getName() + " Quantity: " + productStock.getQuantity() + "\n";
+			ret+=String.format("%-12s x %3d\n",productStock.getProduct().getName(), productStock.getQuantity());
 		}
-		return ret + "]";
+		return ret;
 	}
 	
 	public static void main(String[] args) {
-		Customer james = new Customer("src/ShopVideoVersion/customer.csv");
+		Customer james = new Customer("src/Shop2/customer.csv");
 		System.out.println(james);
 	}
-	
-	
-
 }

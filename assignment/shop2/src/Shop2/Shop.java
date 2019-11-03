@@ -18,12 +18,12 @@ public class Shop {
 		List<String> lines = Collections.emptyList();
 		try {
 			lines = Files.readAllLines(Paths.get(fileName), StandardCharsets.UTF_8);
-			System.out.println(lines.get(0));
+			//System.out.println(lines.get(0));
 			cash = Double.parseDouble(lines.get(0));
 			// i am removing at index 0 as it is the only one treated differently
 			lines.remove(0);
 			for (String line : lines) {
-				System.out.println(line);
+				//System.out.println(line);
 				String[] arr = line.split(",");
 				String name = arr[0];
 				double price = Double.parseDouble(arr[1]);
@@ -32,7 +32,6 @@ public class Shop {
 				ProductStock s = new ProductStock(p, quantity);
 				stock.add(s);
 			}
-			
 		}
 
 		catch (IOException e) {
@@ -52,12 +51,30 @@ public class Shop {
 
 	@Override
 	public String toString() {
-		return "Shop [cash=" + cash + ", stock=" + stock + "]";
+		//return "Shop [cash=" + cash + ", stock=" + stock + "]";
+		return String.format("Cash: %.2f\n%s",cash, stock);
+	}
+
+	public String getItemDetails(String ItemName, int ItemQuantity) {
+		String ret="";
+		for (ProductStock productStock : stock) {
+			if(productStock.getProduct().getName().contains(ItemName)) {
+				String product = productStock.getProduct().getName();
+				int quantity = productStock.getQuantity();
+				double price = productStock.getProduct().getPrice();
+				ret = String.format("%s %f %d",product, price, quantity);
+			}
+		}
+		return ret;
 	}
 
 	public static void main(String[] args) {
-		Shop shop = new Shop("src/ShopVideoVersion/stock.csv");
-		Customer cust = new Customer("src/ShopVideoVersion/customer.csv");
+		Shop shop = new Shop("src/Shop2/stock.csv");
+		System.out.println(shop);	
+		Customer cust = new Customer("src/Shop2/customer.csv");
+		//System.out.println(cust);
+		String ret = shop.getItemDetails("Bread", 5);
+		System.out.print(ret);
 	}
 
 }

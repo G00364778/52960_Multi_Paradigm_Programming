@@ -1,0 +1,18 @@
+{
+  "configurations": [
+    {
+      "type": "java",
+      "name": "CodeLens (Launch) - Customer",
+      "request": "launch",
+      "mainClass": "Shop2/Shop2.Customer",
+      "projectName": "Shop2"
+    },
+    {
+      "type": "java",
+      "name": "CodeLens (Launch) - Shop",
+      "request": "launch",
+      "mainClass": "Shop2/Shop2.Shop",
+      "projectName": "Shop2"
+    }
+  ]
+}

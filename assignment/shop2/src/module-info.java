@@ -1,2 +1,2 @@
-module ShopVideoVersion {
+module Shop2 {
 }

@@ -20,9 +20,7 @@ public class ProductStock {
 
 	@Override
 	public String toString() {
-		return "ProductStock [product=" + product + ", quantity=" + quantity + "]";
+		return String.format("%s x %3d\n",product, quantity);
 	}
 	
-	
-
 }
