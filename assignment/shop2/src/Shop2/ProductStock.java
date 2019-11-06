@@ -22,5 +22,9 @@ public class ProductStock {
 	public String toString() {
 		return String.format("%s x %3d\n",product, quantity);
 	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
 	
 }
