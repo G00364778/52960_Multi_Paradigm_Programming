@@ -45,9 +45,17 @@ public class Shop {
 		return cash;
 	}
 
+	public void setCash(double cash) {
+		this.cash = cash;
+	}
+
 	public ArrayList<ProductStock> getStock() {
 		return stock;
 	}
+	
+	public void setStock(ArrayList<ProductStock> stock) {
+		this.stock = stock;
+	}	
 
 	@Override
 	public String toString() {
@@ -55,26 +63,56 @@ public class Shop {
 		return String.format("Cash: %.2f\n%s",cash, stock);
 	}
 
-	public String getItemDetails(String ItemName, int ItemQuantity) {
+	public String getItemDetails(String ItemName) {
 		String ret="";
 		for (ProductStock productStock : stock) {
 			if(productStock.getProduct().getName().contains(ItemName)) {
 				String product = productStock.getProduct().getName();
 				int quantity = productStock.getQuantity();
 				double price = productStock.getProduct().getPrice();
-				ret = String.format("%s %f %d",product, price, quantity);
+				ret = String.format("%s, %.2f, %d",product, price, quantity);
 			}
 		}
 		return ret;
 	}
 
 	public static void main(String[] args) {
+		ArrayList<String> receipt = new ArrayList<String>;
 		Shop shop = new Shop("src/Shop2/stock.csv");
 		System.out.println(shop);	
 		Customer cust = new Customer("src/Shop2/customer.csv");
 		//System.out.println(cust);
-		String ret = shop.getItemDetails("Bread", 5);
-		System.out.print(ret);
+		double custBudget = cust.getBudget();
+		String custName = cust.getName();
+		ArrayList<ProductStock> list = cust.getShoppingList();
+		for (ProductStock productStock : list) {
+			//get name and quantity from shopping list
+			String listName = productStock.getProduct().getName();
+			int listQuantity = productStock.getQuantity();
+			//then find the item details is the shop
+			String ret = shop.getItemDetails(listName);
+			String[] found = ret.split(","); //split the returned strings to values  
+			String name = found[0].trim();
+			double price = Double.parseDouble(found[1].trim());
+			int quantity = Integer.parseInt(found[2].trim());
+			System.out.printf("%s %f %d",name,price,quantity);
+			if (quantity>listQuantity) { //if the quantity wanted is available assign it
+				
+			} else {//otherwise assigne the balance of the only
+				
+			}	
+				//update the receipt with the name, quantity and amount
+				Double lineTotal = listQuantity * listQuantity;
+				receipt.add(String.format("%-15s x %3d @ %.2f = %.2f", listName, listQuantity, price, lineTotal));
+				//subtract from the stock
+				shop.setStock(quantity-listQuantity);
+				//and add to the cash
+				double val = shop.getCash();
+				val+=lineTotal;
+				shop.setCash(val);
+			
+		}
 	}
+
 
 }
