@@ -240,7 +240,6 @@ void saveShopState(struct Shop s,char * filename){
 	return;
 }
 
-
 char displayShopMenu()
 {
 	static int ShopLoaded = 0, ListLoaded = 0 ;
@@ -252,6 +251,7 @@ char displayShopMenu()
 	printf("\tp - Print Shop Stock\n");
 	printf("\ts - Load the shopping list from csv\n");
 	printf("\tr - Print the shopping list\n");
+	printf("\tm - Manually Enter Shopping list\n");
 	printf("\th - Process shopping list\n");
 	printf("\tx - Exit Application\n");
 	printf("\n  Select option please: ");
@@ -260,6 +260,46 @@ char displayShopMenu()
 	if (c=='l'){ShopLoaded=1;}
 	if (c=='s'){ListLoaded=1;}
 	return c;
+} 
+
+void enterManualList()
+{
+	char name[20];
+	float budget;
+	int loop = 1;
+	char items[20][20];
+	int quantities[20];
+	int index=0;
+	printf("You are now at the manual entry shop.\n");
+	printf("Please enter your name: ");	
+	scanf("%s",&name);
+	printf("Please enter your budget amount: ");
+	scanf("%f",&budget);
+	printf("NAME: %s BUDGET: %.2f\n", name, budget);
+	while (loop==1)
+	{
+		char c;
+		printf("Please enter the item name to add: ");
+		scanf("%s",&items[index]);
+		printf("Please enter the item quantity to add: ");
+		scanf("%i",&quantities[index]);
+		printf("Do you want to add another item? (y/n)");
+		getchar();
+		c = getchar();
+		if (c=='n')
+		{
+			loop=0;
+		}
+		else if (c=='y')
+		{
+			index++;
+		}
+	}
+	//now save this to the csv file
+	
+	printf(" <ENTER> to continue ");
+	getchar();
+	getchar();
 }
 
 int main(void) 
@@ -301,6 +341,10 @@ int main(void)
 			printf(" <ENTER> to continue ");
 			getchar();
 			getchar();
+		}
+		else if (c=='m')
+		{
+			enterManualList();
 		}
 		else if (c=='h') //process the shopping list against the shop stock
 		{
