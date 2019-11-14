@@ -268,21 +268,30 @@ void enterManualList()
 	float budget;
 	int loop = 1;
 	char items[20][20];
+	char tempStr[20];
 	int quantities[20];
 	int index=0;
 	printf("You are now at the manual entry shop.\n");
 	printf("Please enter your name: ");	
-	scanf("%s",&name);
+	getchar();
+	scanf("%20[^\n]",&name);
 	printf("Please enter your budget amount: ");
-	scanf("%f",&budget);
-	printf("NAME: %s BUDGET: %.2f\n", name, budget);
+	scanf("%s",&tempStr);
+	budget=atof(tempStr);
+	printf("NAME: '%s' BUDGET: '%.2f'\n", name, budget);
+	//fflush(stdin);
 	while (loop==1)
 	{
 		char c;
 		printf("Please enter the item name to add: ");
-		scanf("%s",&items[index]);
+		//gets(tempStr);
+		getchar();
+		scanf("%20[a-zA-z ]",&tempStr);
+		printf("%s\n",tempStr);
 		printf("Please enter the item quantity to add: ");
-		scanf("%i",&quantities[index]);
+		//gets(tempStr);
+		scanf("%s",&tempStr);
+		printf("%s\n",tempStr);
 		printf("Do you want to add another item? (y/n)");
 		getchar();
 		c = getchar();
@@ -296,7 +305,14 @@ void enterManualList()
 		}
 	}
 	//now save this to the csv file
-	
+	FILE *fp = fopen("manual.csv", "w");
+	fprintf(fp,"Name,  %s\nBudget, %f\n",name,budget);
+	for (size_t i = 0; i <= index; i++)
+	{
+		fprintf(fp,"%s, %i", items[i], quantities[i]);
+	}
+	fclose(fp);
+	printf("List saved to file manual.csv\n");
 	printf(" <ENTER> to continue ");
 	getchar();
 	getchar();
