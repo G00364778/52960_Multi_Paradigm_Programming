@@ -118,8 +118,9 @@ struct Customer createAndLoadShoppingList(char *csvfile){
 		//and increment the index
 		else
 		{
-			int n = atoi(tokens[2]); // convert the number of items to an interger value
-			double cost = atof(tokens[1]);// convert the cost to a floating point value
+			int n = atoi(tokens[1]); // convert the number of items to an interger value
+			//double cost = atof(tokens[1]);// convert the cost to a floating point value
+			double cost = 0;
 			//create a product structure with a name and cost
 			struct Product product = { tokens[0], cost };
 			//and add the product structure and number of the items to the shopping list
@@ -218,7 +219,7 @@ struct Shop processOrder(struct Shop s, struct Customer c){
 		}
 	}
 	printf("%s   TOTAL:\t%4.2f\n",banner,total);//print out the total
-	printf(" BALANCE:\t%4.2f",c.budget-total);//print oiut the balance left from the budget submitted
+	printf(" BALANCE:\t%4.2f\n",c.budget-total);//print oiut the balance left from the budget submitted
 	return s;
 }
 
@@ -271,6 +272,7 @@ void enterManualList()
 	char tempStr[20];
 	int quantities[20];
 	int index=0;
+
 	printf("You are now at the manual entry shop.\n");
 	printf("Please enter your name: ");	
 	getchar();
@@ -286,12 +288,13 @@ void enterManualList()
 		printf("Please enter the item name to add: ");
 		//gets(tempStr);
 		getchar();
-		scanf("%20[a-zA-z ]",&tempStr);
-		printf("%s\n",tempStr);
+		scanf("%20[a-zA-z ]",&items[index]);
+		//printf("%s\n",items[index]);
 		printf("Please enter the item quantity to add: ");
 		//gets(tempStr);
 		scanf("%s",&tempStr);
-		printf("%s\n",tempStr);
+		//printf("%s\n",tempStr);
+		quantities[index] =  atoi(tempStr);
 		printf("Do you want to add another item? (y/n)");
 		getchar();
 		c = getchar();
@@ -305,14 +308,14 @@ void enterManualList()
 		}
 	}
 	//now save this to the csv file
-	FILE *fp = fopen("manual.csv", "w");
+	FILE *fp = fopen("order.csv", "w");
 	fprintf(fp,"Name,  %s\nBudget, %f\n",name,budget);
 	for (size_t i = 0; i <= index; i++)
 	{
-		fprintf(fp,"%s, %i", items[i], quantities[i]);
+		fprintf(fp,"%s, %i\n", items[i], quantities[i]);
 	}
 	fclose(fp);
-	printf("List saved to file manual.csv\n");
+	printf("List saved to file order.csv\n");
 	printf(" <ENTER> to continue ");
 	getchar();
 	getchar();
@@ -329,13 +332,14 @@ int main(void)
 		if (c=='x') //exit
 		{
 			loop=0; //loop will break orr pass return
-			printf("  Exiting interactive mode now...\n");
+			printf("  Exiting interactive mode, saving shop state...\n");
 			saveShopState(shop,"stock.csv"); //on exit save the shop state
 		}
 		else if (c=='l') //load shop 
 		{
 			printf("  Loading stock now ....\n");
-			 shop = createAndStockShop();
+			shop = createAndStockShop();
+			getchar();
 		}	
 		else if (c=='p') //print shop
 		{
@@ -346,10 +350,11 @@ int main(void)
 		}
 		else if (c=='s') //load shopping list
 		{
+			printf("  Loading shopping list ....\n");
 			customer = createAndLoadShoppingList("order.csv");
 			//printf(" <ENTER> to continue ");
 			//getchar();
-			//getchar();
+			getchar();
 		}
 		else if (c=='r') //print shopping list
 		{
@@ -373,6 +378,9 @@ int main(void)
 		else
 		{
 			printf("\n  Invalid option!\n  Try again please.\n\n");
+			printf(" <ENTER> to continue ");
+			getchar();
+			getchar();
 		}
 		
 	}
@@ -380,6 +388,7 @@ int main(void)
 	//struct Shop shop = createAndStockShop();
 	//printShop(shop);
 	//struct Customer customer = createAndLoadShoppingList("order.csv");
+	// customer = createAndLoadShoppingList("order.csv");
 	//printCustomer(customer);
 	//shop = processOrder(shop,customer);
 	//printShop(shop);
