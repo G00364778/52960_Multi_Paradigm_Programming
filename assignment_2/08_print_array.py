@@ -6,8 +6,10 @@
 
 def stepArr(arr): 
   if len(arr)== 1: 
+    #if the array length reached length one only print and return
     print(arr[0])
   else: 
+    #otherwise print and iterate
     print(arr[0])
     stepArr(arr[1:])
 
