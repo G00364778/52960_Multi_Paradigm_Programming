@@ -15,7 +15,7 @@ def recursive_index(L, v):
 if __name__ == '__main__':
   
   # array to test
-  string = 'The rain in Spain falls mainley in the plane'
+  string = 'The rain in Spain falls mainly in the plain'
   find = 'S'
   # call the recursive function passing  in the array
   ans = recursive_index(string, find)

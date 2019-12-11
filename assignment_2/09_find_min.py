@@ -15,6 +15,6 @@ def findmin(A, n):
   
 # Driver Code 
 if __name__ == '__main__': 
-    A = [10, 4, 45, 6, 50, 10, 22] 
+    A = [10, 14, 45, 6, 50, 10, 22] 
     n = len(A) 
-    print(findmin(A, n)) 
+    print("Smallest value in array is: {}".format(findmin(A, n)))

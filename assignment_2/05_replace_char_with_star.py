@@ -25,7 +25,7 @@ def replaceChar(myString, oldChar, newChar):
 if __name__ == '__main__':
   
   # array to test
-  string = 'The rain in Spain falls mainley in the plane'
+  string = 'The rain in Spain falls mainly in the plain'
   # call the recursive function passing  in the array
   ans = replaceChar(string, ' ', '_')
   # print the final answer
